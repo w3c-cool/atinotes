@@ -47,5 +47,13 @@ export default defineNuxtConfig({
         commaDangle: 'never'
       }
     }
+  },
+
+  ogImage: {
+    compatibility: {
+      runtime: {
+        resvg: 'wasm'
+      }
+    }
   }
 })
