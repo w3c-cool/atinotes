@@ -34,11 +34,7 @@ export default defineNuxtConfig({
     '/nuxt-custom-fetch': { redirect: { to: 'https://nuxt.com/docs/guide/recipes/custom-usefetch', statusCode: 302 } }
   },
   future: { compatibilityVersion: 4 },
-  compatibilityDate: '2024-07-29',
-
-  nitro: {
-    preset: 'cloudflare-module'
-  },
+  compatibilityDate: '2025-12-10',
 
   hub: {
     kv: true
