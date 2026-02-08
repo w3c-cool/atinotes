@@ -95,7 +95,7 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
             @submit="onSubmit"
           >
             <UFormField
-              label="Please enter the admin password"
+              label="请输入管理员密码 演示密码 123456"
               name="password"
             >
               <UInput
