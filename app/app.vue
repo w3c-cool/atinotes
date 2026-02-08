@@ -73,7 +73,7 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
         <UColorModeButton />
         <UButton
           icon="i-simple-icons-github"
-          to="https://github.com/atinux/atinotes"
+          to="https://cnb.cool/W3C"
           target="_blank"
           color="neutral"
           variant="ghost"
