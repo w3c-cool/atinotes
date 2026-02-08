@@ -44,7 +44,7 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
     </Head>
     <NuxtLoadingIndicator />
     <UHeader
-      title="Atinotes"
+      title="W3C技术联盟"
       :toggle="false"
     >
       <template #right>
