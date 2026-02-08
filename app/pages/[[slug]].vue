@@ -7,10 +7,10 @@ const { data: page } = await useFetch(`/api/pages/${slug}`)
 const { loggedIn } = useUserSession()
 
 useSeoMeta({
-  titleTemplate: '%s | Atinotes',
+  titleTemplate: '%s | W3C技术联盟',
   title: () => page.value.parsed.data?.title || 'Missing title',
   description: () => page.value.parsed.data?.description || 'Missing description',
-  ogTitle: () => (page.value.parsed.data?.title || 'Missing title') + ' | Atinotes'
+  ogTitle: () => (page.value.parsed.data?.title || 'Missing title') + ' | W3C技术联盟'
 })
 
 defineOgImageComponent('OgImagePage', {
