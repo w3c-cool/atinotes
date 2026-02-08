@@ -112,7 +112,7 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
               color="neutral"
               block
             >
-              Login to edit
+              登录编辑
             </UButton>
           </UForm>
         </UCard>
