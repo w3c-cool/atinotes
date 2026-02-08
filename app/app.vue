@@ -10,7 +10,7 @@ const state = reactive({
 })
 
 useSeoMeta({
-  ogSiteName: 'Atinotes',
+  ogSiteName: 'W3C技术联盟',
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterSite: 'atinux'
