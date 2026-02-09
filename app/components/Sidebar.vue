@@ -7,7 +7,7 @@ const currentPath = computed(() => {
 })
 
 // 获取所有页面
-const { data: allPages } = await useFetch<string[]>('/api/pages')
+const { data: allPages } = await useFetch<string[]>('/api/pages/all')
 
 // 获取页面标题缓存
 const pageTitles = ref<Record<string, string>>({})

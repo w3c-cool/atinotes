@@ -3,7 +3,7 @@ const editing = ref(false)
 const saving = ref(false)
 const slug = useRoute().params.slug || 'index'
 const { data: page } = await useFetch(`/api/pages/${slug}`)
-const { data: pages } = await useFetch('/api/pages')
+const { data: pages } = await useFetch('/api/pages/all')
 const { loggedIn } = useUserSession()
 
 // 计算阅读时间 (约 400 字/分钟)
