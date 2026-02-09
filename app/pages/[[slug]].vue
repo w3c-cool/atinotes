@@ -60,11 +60,20 @@ const currentPath = computed(() => slug === 'index' ? '/' : `/${slug}`)
         <h3 class="font-semibold text-sm mb-3 text-gray-900 dark:text-gray-100">
           文档列表
         </h3>
-        <UNavigationTree :links="pages?.map(p => ({
-          label: p === 'index' ? '首页' : p,
-          to: p === 'index' ? '/' : `/${p}`,
-          active: currentPath === (p === 'index' ? '/' : `/${p}`)
-        })) || []" />
+        <ul class="space-y-1">
+          <li v-for="p in pages || []" :key="p">
+            <NuxtLink
+              :to="p === 'index' ? '/' : `/${p}`"
+              class="flex items-center px-2 py-1.5 text-sm rounded-md transition-colors"
+              :class="currentPath === (p === 'index' ? '/' : `/${p}`)
+                ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+              "
+            >
+              {{ p === 'index' ? '首页' : p }}
+            </NuxtLink>
+          </li>
+        </ul>
       </div>
     </template>
     <template
