@@ -1,0 +1,36 @@
+.docker-env: &docker-env
+  runner:
+    cpus: 64
+  docker:
+    image: docker.cnb.cool/workspaces/image:w3c
+.install: &install
+  name: 安装依赖
+  script: npm install
+.build: &build
+  name: 构建当前项目
+  script: npm run build
+.deploy: &deploy
+  name: 部署到 Workers
+  imports: https://cnb.cool/WorkSpaces/envs/-/blob/main/cloudflare.yml
+  script: wrangler deploy
+$:
+  vscode:
+    - <<: *docker-env
+      services:
+        - vscode
+        - docker
+      stages:
+        - <<: *install
+main:
+  push:
+    - <<: *docker-env
+      stages:
+        - <<: *install
+        - <<: *build
+        - <<: *deploy
+  web_trigger:
+    - <<: *docker-env
+      stages:
+        - <<: *install
+        - <<: *build
+        - <<: *deploy

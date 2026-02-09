@@ -1,11 +1,17 @@
 <script setup>
-const editor = ref(null)
 const editing = ref(false)
 const saving = ref(false)
 const slug = useRoute().params.slug || 'index'
 const { data: page } = await useFetch(`/api/pages/${slug}`)
 const { data: pages } = await useFetch('/api/pages')
 const { loggedIn } = useUserSession()
+
+// 计算阅读时间 (约 400 字/分钟)
+const readTime = computed(() => {
+  if (!page.value?.body) return 0
+  const wordCount = page.value.body.split(/\s+/).length
+  return Math.max(1, Math.ceil(wordCount / 400))
+})
 
 useSeoMeta({
   titleTemplate: '%s | W3C技术联盟',
@@ -19,20 +25,11 @@ defineOgImageComponent('OgImagePage', {
   description: page.value.parsed.data?.description || 'Missing description'
 })
 
-async function editMode() {
+function editMode() {
   if (!loggedIn.value) {
     return
   }
   editing.value = true
-  await nextTick()
-  editor.value.focus()
-  autogrow()
-}
-
-function autogrow() {
-  if (!editor.value) return
-  editor.value.style.height = '5px'
-  editor.value.style.height = `${editor.value.scrollHeight}px`
 }
 
 function save() {
@@ -56,32 +53,19 @@ const currentPath = computed(() => slug === 'index' ? '/' : `/${slug}`)
 <template>
   <UPage>
     <template #left>
-      <div class="mb-6">
-        <h3 class="font-semibold text-sm mb-3 text-gray-900 dark:text-gray-100">
-          文档列表
-        </h3>
-        <ul class="space-y-1">
-          <li v-for="p in pages || []" :key="p">
-            <NuxtLink
-              :to="p === 'index' ? '/' : `/${p}`"
-              class="flex items-center px-2 py-1.5 text-sm rounded-md transition-colors"
-              :class="currentPath === (p === 'index' ? '/' : `/${p}`)
-                ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-              "
-            >
-              {{ p === 'index' ? '首页' : p }}
-            </NuxtLink>
-          </li>
-        </ul>
-      </div>
+      <Sidebar />
     </template>
+
     <template
       v-if="page.parsed?.toc?.links?.length"
       #right
     >
       <UContentToc :links="page.parsed?.toc?.links" />
     </template>
+
+    <!-- 面包屑导航 -->
+    <Breadcrumb :current-slug="slug" />
+
     <UPageHeader
       v-if="!editing"
       :title="page.parsed?.data?.title"
@@ -102,30 +86,41 @@ const currentPath = computed(() => slug === 'index' ? '/' : `/${slug}`)
         />
       </template>
     </UPageHeader>
+
+    <!-- 页面元信息 -->
+    <PageMeta
+      v-if="!editing"
+      :updated-at="page.parsed?.data?.updatedAt"
+      :author="page.parsed?.data?.author"
+      :read-time="readTime"
+      :tags="page.parsed?.data?.tags"
+    />
+
     <UPageBody
       prose
       @dblclick="editMode"
     >
       <form
         v-if="editing"
-        class="editor-wrapper"
         @submit.prevent="save"
       >
-        <textarea
-          ref="editor"
+        <MarkdownEditor
           v-model="page.body"
-          @blur="save"
-          @input="autogrow"
+          :saving="saving"
         />
-        <UButton type="submit">
-          {{ saving ? 'Saving' : 'Save' }}
-        </UButton>
       </form>
-      <MDCRenderer
-        v-else
-        :body="page.parsed.body"
-        class="body"
-      />
+      <div v-else>
+        <MDCRenderer
+          :body="page.parsed.body"
+          class="body"
+        />
+        <!-- 上一篇/下一篇导航 -->
+        <PageNavigation
+          v-if="pages"
+          :current-slug="slug"
+          :pages="pages"
+        />
+      </div>
     </UPageBody>
   </UPage>
 </template>

@@ -11,6 +11,16 @@ export default eventHandler(async (event) => {
   const { body } = await readBody(event)
   const parsed = await parseMarkdown(body)
 
+  // 添加更新时间戳
+  const updatedAt = new Date().toISOString()
+
+  // 如果 parsed.data 存在,保留原有数据并添加更新时间
+  if (parsed.data) {
+    parsed.data.updatedAt = updatedAt
+  } else {
+    parsed.data = { updatedAt }
+  }
+
   await kv.set(slug, { body, parsed })
 
   return { slug, body, parsed }

@@ -49,6 +49,16 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
     >
       <template #right>
         <UButton
+          icon="i-lucide-search"
+          color="neutral"
+          variant="ghost"
+          to="/"
+        />
+        <USeparator
+          orientation="vertical"
+          class="mx-2 h-6"
+        />
+        <UButton
           v-if="loggedIn"
           color="neutral"
           variant="soft"

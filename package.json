@@ -18,6 +18,8 @@
     "@nuxthub/core": "^0.10.0",
     "@nuxtjs/mdc": "^0.19.1",
     "@nuxtjs/plausible": "^2.0.1",
+    "@vueuse/core": "^14.2.0",
+    "fuse.js": "^7.1.0",
     "nuxt": "^4.2.2",
     "nuxt-auth-utils": "^0.5.26",
     "nuxt-og-image": "5.1.12",
@@ -30,8 +32,7 @@
     "@types/node": "^25.0.0",
     "eslint": "^9.39.1",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.1.8",
-    "wrangler": "^4.53.0"
+    "vue-tsc": "^3.1.8"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
