@@ -4,6 +4,7 @@ const editing = ref(false)
 const saving = ref(false)
 const slug = useRoute().params.slug || 'index'
 const { data: page } = await useFetch(`/api/pages/${slug}`)
+const { data: pages } = await useFetch('/api/pages')
 const { loggedIn } = useUserSession()
 
 useSeoMeta({
@@ -48,10 +49,24 @@ function save() {
     alert(err.data.message)
   })
 }
+
+const currentPath = computed(() => slug === 'index' ? '/' : `/${slug}`)
 </script>
 
 <template>
   <UPage>
+    <template #left>
+      <div class="mb-6">
+        <h3 class="font-semibold text-sm mb-3 text-gray-900 dark:text-gray-100">
+          文档列表
+        </h3>
+        <UNavigationTree :links="pages?.map(p => ({
+          label: p === 'index' ? '首页' : p,
+          to: p === 'index' ? '/' : `/${p}`,
+          active: currentPath === (p === 'index' ? '/' : `/${p}`)
+        })) || []" />
+      </div>
+    </template>
     <template
       v-if="page.parsed?.toc?.links?.length"
       #right
