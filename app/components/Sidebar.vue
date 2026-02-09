@@ -13,7 +13,7 @@ const { data: allPages } = await useFetch('/api/pages')
 const pageTitles = ref<Record<string, string>>({})
 
 // 加载所有页面的标题
-if (allPages.value) {
+if (Array.isArray(allPages.value)) {
   const titlesPromises = allPages.value.map(async (slug) => {
     try {
       const page = await $fetch(`/api/pages/${slug}`)
