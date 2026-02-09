@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounceFn, onClickOutside } from '@vueuse/core'
 
 const { data: pages } = await useFetch('/api/pages')
 const query = ref('')
