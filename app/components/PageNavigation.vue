@@ -4,15 +4,18 @@ const props = defineProps<{
   pages: string[]
 }>()
 
-const currentIndex = computed(() => props.pages.indexOf(props.currentSlug))
+const currentIndex = computed(() => {
+  if (!Array.isArray(props.pages)) return -1
+  return props.pages.indexOf(props.currentSlug)
+})
 
 const prevPage = computed(() => {
-  if (currentIndex.value <= 0) return null
+  if (!Array.isArray(props.pages) || currentIndex.value <= 0) return null
   return props.pages[currentIndex.value - 1]
 })
 
 const nextPage = computed(() => {
-  if (currentIndex.value === -1 || currentIndex.value >= props.pages.length - 1) return null
+  if (!Array.isArray(props.pages) || currentIndex.value === -1 || currentIndex.value >= props.pages.length - 1) return null
   return props.pages[currentIndex.value + 1]
 })
 </script>

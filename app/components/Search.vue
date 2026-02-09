@@ -10,6 +10,7 @@ const searchRef = ref<HTMLElement>()
 // 加载所有页面内容用于搜索
 const { data: allPages } = await useFetch('/api/pages/all', {
   transform: async (slugs) => {
+    if (!Array.isArray(slugs)) return []
     const pagesData = await Promise.all(
       slugs.map(async (slug) => {
         const { data } = await $fetch(`/api/pages/${slug}`)
