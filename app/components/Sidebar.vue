@@ -6,30 +6,11 @@ const currentPath = computed(() => {
   return route.path
 })
 
-// 获取所有页面和页面详情
-const { data: allPages } = await useFetch('/api/pages')
+// 获取所有页面
+const { data: allPages } = await useFetch<string[]>('/api/pages')
 
 // 获取页面标题缓存
 const pageTitles = ref<Record<string, string>>({})
-
-// 加载所有页面的标题
-if (Array.isArray(allPages.value)) {
-  const titlesPromises = allPages.value.map(async (slug) => {
-    try {
-      const page = await $fetch(`/api/pages/${slug}`)
-      return { slug, title: page.parsed?.data?.title }
-    } catch {
-      return { slug, title: null }
-    }
-  })
-
-  const results = await Promise.all(titlesPromises)
-  results.forEach(({ slug, title }) => {
-    if (title) {
-      pageTitles.value[slug] = title
-    }
-  })
-}
 
 // 分组图标映射
 const groupIcons: Record<string, string> = {
@@ -50,7 +31,7 @@ const groupIcons: Record<string, string> = {
 
 // 自动生成分组
 const autoGroups = computed(() => {
-  if (!allPages.value) return []
+  if (!Array.isArray(allPages.value)) return []
 
   const groups: Map<string, SidebarGroup> = new Map()
 
@@ -130,6 +111,27 @@ const autoGroups = computed(() => {
     if (b.title === '其他') return -1
     return a.title.localeCompare(b.title, 'zh-CN')
   })
+})
+
+// 客户端加载页面标题
+onMounted(async () => {
+  if (Array.isArray(allPages.value)) {
+    const titlesPromises = allPages.value.map(async (slug) => {
+      try {
+        const page = await $fetch(`/api/pages/${slug}`)
+        return { slug, title: page.parsed?.data?.title }
+      } catch {
+        return { slug, title: null }
+      }
+    })
+
+    const results = await Promise.all(titlesPromises)
+    results.forEach(({ slug, title }) => {
+      if (title) {
+        pageTitles.value[slug] = title
+      }
+    })
+  }
 })
 </script>
 

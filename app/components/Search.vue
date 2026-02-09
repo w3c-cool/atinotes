@@ -6,10 +6,15 @@ const query = ref('')
 const showResults = ref(false)
 const searchRef = ref<HTMLElement>()
 
-// 加载所有页面内容用于搜索
-const { data: allPages } = await useFetch('/api/pages', {
-  transform: async (slugs) => {
-    if (!Array.isArray(slugs)) return []
+// 所有页面数据
+const allPages = ref<any[]>([])
+
+// 客户端加载所有页面内容
+onMounted(async () => {
+  try {
+    const slugs = await $fetch<string[]>('/api/pages')
+    if (!Array.isArray(slugs)) return
+
     const pagesData = await Promise.all(
       slugs.map(async (slug) => {
         try {
@@ -20,12 +25,14 @@ const { data: allPages } = await useFetch('/api/pages', {
         }
       })
     )
-    return pagesData.filter(Boolean)
+    allPages.value = pagesData.filter((p): p is NonNullable<typeof p> => p !== null)
+  } catch {
+    // 静默失败
   }
 })
 
 const fuse = computed(() => {
-  if (!Array.isArray(allPages.value)) return null
+  if (!Array.isArray(allPages.value) || allPages.value.length === 0) return null
   return new Fuse(allPages.value, {
     keys: [
       { name: 'slug', weight: 0.3 },
