@@ -1,4 +1,5 @@
 import { kv } from 'hub:kv'
+import { parseMarkdown } from '@nuxtjs/mdc/runtime'
 
 interface Note {
   body: string
