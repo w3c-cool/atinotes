@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { SidebarGroup } from '~/types/sidebar'
 
+const route = useRoute()
 const currentPath = computed(() => {
-  const route = useRoute()
   return route.path
 })
 
@@ -143,7 +143,7 @@ const autoGroups = computed(() => {
     <!-- 分组侧边栏 -->
     <div class="space-y-1">
       <SidebarGroup
-        v-for="group in autoGroupPages"
+        v-for="group in autoGroups"
         :key="group.title"
         :title="group.title"
         :icon="group.icon"

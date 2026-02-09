@@ -2,27 +2,30 @@
 import Fuse from 'fuse.js'
 import { useDebounceFn, onClickOutside } from '@vueuse/core'
 
-const { data: pages } = await useFetch('/api/pages')
 const query = ref('')
 const showResults = ref(false)
 const searchRef = ref<HTMLElement>()
 
 // 加载所有页面内容用于搜索
-const { data: allPages } = await useFetch('/api/pages/all', {
+const { data: allPages } = await useFetch('/api/pages', {
   transform: async (slugs) => {
     if (!Array.isArray(slugs)) return []
     const pagesData = await Promise.all(
       slugs.map(async (slug) => {
-        const { data } = await $fetch(`/api/pages/${slug}`)
-        return { slug, ...data }
+        try {
+          const page = await $fetch(`/api/pages/${slug}`)
+          return { slug, ...page }
+        } catch {
+          return null
+        }
       })
     )
-    return pagesData
+    return pagesData.filter(Boolean)
   }
 })
 
 const fuse = computed(() => {
-  if (!allPages.value) return null
+  if (!Array.isArray(allPages.value)) return null
   return new Fuse(allPages.value, {
     keys: [
       { name: 'slug', weight: 0.3 },
@@ -61,7 +64,7 @@ watch(query, (val) => {
       color="neutral"
       variant="soft"
       @input="debouncedSearch($event)"
-      @focus="showResults = query.length > 0"
+      @focus="showResults = query.value.length > 0"
     />
     <div
       v-if="showResults && searchResults.length > 0"

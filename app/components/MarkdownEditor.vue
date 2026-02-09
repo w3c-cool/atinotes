@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { parseMarkdown } from '@nuxtjs/mdc/runtime'
+
 const props = defineProps<{
   modelValue: string
   saving?: boolean
@@ -18,7 +20,7 @@ function autogrow() {
   editor.value.style.height = `${editor.value.scrollHeight}px`
 }
 
-const { parsed } = useAsyncData(`markdown-preview-${props.modelValue.slice(0, 20)}`, async () => {
+const { data: parsed } = useAsyncData(`markdown-preview-${props.modelValue.slice(0, 20)}`, async () => {
   if (!props.modelValue) return null
   return await parseMarkdown(props.modelValue)
 }, {
